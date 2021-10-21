@@ -4,7 +4,7 @@ import numpy as np
 import PEASUtil
 from sklearn.neural_network import MLPClassifier
 from sklearn import preprocessing
-from sklearn.externals import joblib
+import joblib
 import argparse
 import os
 
