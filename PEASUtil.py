@@ -244,11 +244,14 @@ def getData(data, featurecols, labelencoder, classconversion=None):
     for i in range(0, len(labelencoder)):
         le = preprocessing.LabelEncoder()
         le.fit(labelencoder[i][1:])
+
         data = data.loc[~pd.isnull(data.iloc[:, labelencoder[i][0]]),:]
         data.iloc[:, labelencoder[i][0]] = le.transform(data.iloc[:, labelencoder[i][0]].values)
-    
+
+        
     features = data.iloc[:, featurecols].values
     features = features.astype(float)
+
     
     featurelabels = data.columns[featurecols].values
     if classconversion is not None:

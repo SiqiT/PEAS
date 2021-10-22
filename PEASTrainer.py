@@ -7,6 +7,7 @@ from sklearn import preprocessing
 import joblib
 import argparse
 import os
+from sklearn.impute import SimpleImputer
 
 wd = os.getcwd()
 
@@ -65,7 +66,8 @@ randomstate = args.randomstate
 parameters['random_state'] = randomstate
 
 #Model Training
-imputer = preprocessing.Imputer(missing_values='NaN', strategy='mean', axis=0)
+#imputer = preprocessing.Imputer(missing_values='NaN', strategy='mean', axis=0)
+imputer = SimpleImputer(strategy='mean')
 trainX = np.zeros((0,len(featurecolumns)))
 trainy = np.zeros((0,))
 print("Reading feature files")

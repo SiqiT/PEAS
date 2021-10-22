@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 import PEASUtil
 from sklearn import preprocessing
-from sklearn.externals import joblib
+import joblib
 import argparse
 import os
+from sklearn.impute import SimpleImputer
 
 wd = os.getcwd()
 
@@ -72,7 +73,8 @@ allproba = []
 ally = []
 allpred = []
 alldata = []
-imputer = preprocessing.Imputer(missing_values='NaN', strategy='mean', axis=0)
+#imputer = preprocessing.Imputer(missing_values='NaN', strategy='mean', axis=0)
+imputer = SimpleImputer(strategy='mean')
 
 for i in range(0,len(datasetfiles)):
     curdatalabel = datasetlabels[i]
