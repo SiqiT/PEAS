@@ -7,8 +7,10 @@ import joblib
 import argparse
 import os
 from sklearn.impute import SimpleImputer
+import tensorflow as tf
 
 wd = os.getcwd()
+np.seterr(divide='ignore',invalid='ignore')
 
 parser = argparse.ArgumentParser(description='Loads a model and makes predictions on ATAC-Seq peaks.')
 parser.add_argument('modelfile', type=str, help='The filepath for the saved model (*.pkl).')
@@ -65,7 +67,18 @@ else:
 
 #loading model
 print("Loading model.")
+######################################
 clf = joblib.load(modelfile)
+
+#############################################
+#clf = tf.keras.models.load_model(modelfile)
+#curdata = pd.read_csv(curfile, sep="\t")
+#testX, testy, _, data = PEASUtil.getData(curdata, featurecolumns, labelencoder, classconversion)
+#testX = preprocessing.StandardScaler().fit_transform(imputer.fit_transform(testX))
+#_, accuracy = clf.evaluate(trainX, trainy)
+#print('Accuracy: %.2f' % (accuracy*100))
+
+###########################################################
 
 #make predictions
 print("Reading features and making predictions.")

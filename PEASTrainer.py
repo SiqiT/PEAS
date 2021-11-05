@@ -9,6 +9,29 @@ import argparse
 import os
 from sklearn.impute import SimpleImputer
 
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
+from xgboost import XGBClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import cross_validate
+from sklearn.inspection import permutation_importance
+
+########################DEEPINSIGHT
+from matplotlib import pyplot as plt
+import seaborn as sns
+from sklearn.decomposition import PCA, KernelPCA
+from sklearn.manifold import TSNE
+from scipy.spatial import ConvexHull
+import inspect
+from numpy import loadtxt
+from keras.models import Sequential
+from keras.layers import Dense
+###########################################
+
 wd = os.getcwd()
 
 #argument parsing
@@ -77,14 +100,69 @@ for curfile in datasetfiles:
     trainXi = preprocessing.StandardScaler().fit_transform(imputer.fit_transform(trainXi))
     trainX = np.concatenate((trainX, trainXi))
     trainy = np.concatenate((trainy, trainyi))
+
+train_X,test_X,train_y,test_y = train_test_split(trainX,trainy,test_size=0.2,random_state=5)
+#mlp_clf__tuned_parameters = {"hidden_layer_sizes": [(25,),(50,),(100,50),(200,100),(100,25),(200,)],
+#                             "activation":['relu','tanh','logistic'],
+##                             "solver": ['adam'],
+#                             "verbose": [True],
+#                             "beta_1":[0.999,0.8],
+#                             "beta_2":[0.9999,0.999,0.8],
+#                             "epsilon":[1e-08,1e-06,1e-10]
+#                             }
+########################################Deepinsight
+
+
+
+
+########################################
+#SVM_parameters = {'kernel': ['rbf'], 
+#                  'gamma': [1e-3, 1e-2,1e-4],
+#                     'C': [1, 10, 100, 1000],
+ #                 "verbose": [True]
+ #                }
+                    
+
+#mlp = MLPClassifier()
+#SVM = SVC(probability=True)
+#clf = GradientBoostingClassifier()
+
+#print('searching best..')
+#clf = GridSearchCV(SVM, SVM_parameters, n_jobs=5)
 print("Training Model")
-clf = MLPClassifier(**parameters)
+#clf = SVC(probability=True)
+#clf = RandomForestClassifier(random_state=0)
+#clf = KNeighborsClassifier(n_neighbors=20)
+#clf = MLPClassifier(**parameters)
+#最优#
+clf=MLPClassifier(solver='adam',beta_1=0.999,beta_2=0.999,epsilon=0.000001,activation='logistic',hidden_layer_sizes=(200,))
 print(clf)
-clf.fit(trainX,trainy)
+clf.fit(trainX, trainy)
+#print("Best",clf.best_params_)
+
+####################get feature inportance
+#clf=MLPClassifier(solver='adam',beta_1=0.999,beta_2=0.999,epsilon=0.000001,activation='logistic',hidden_layer_sizes=(200,))
+#print(clf)
+#clf.fit(trainX,trainy)
+#results = permutation_importance(clf, trainX, trainy, scoring='accuracy')
+ #get importance
+#importance = results.importances_mean
+
+#import matplotlib.pyplot as plt
+#summarize feature importance
+#for i,v in enumerate(importance):
+#    print('Feature: %s, Score: %.5f' % (i,v))
+
+#plot feature importance
+#plt.bar([x for x in range(len(importance))], importance)
+#plt.savefig('featureInportance.jpg')
+#plt.show()
+#output = cross_validate(clf, trainX,trainy, cv=5, scoring = 'accuracy',return_estimator =True)
+#print(output)
+####################################################
+
 
 outfile = outdir+modelnamefile+'.pkl'
 print("Writing model to: "+outfile)
 joblib.dump(clf, outfile)
 print("Complete.")
-
-
